@@ -15,7 +15,7 @@ export default function Home() {
         <p className="text-lg text-muted-foreground max-w-xl mx-auto">
           Manage your family’s money, health, meals, schedules, and tasks — all in one easy app.
         </p>
-        <Button size="lg" className="mt-4" onClick={() => window.location.href = "/signup"}>
+        <Button size="lg" className="mt-4" onClick={() => window.location.href = "/register"}>
           Get Started Free
         </Button>
       </section>
