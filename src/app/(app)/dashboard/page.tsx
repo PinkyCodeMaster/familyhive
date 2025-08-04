@@ -4,24 +4,51 @@ import React, { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, PiggyBank, CreditCard, Target } from "lucide-react";
 import FinancialSummaryCard from "@/components/dashboard/financial-summary-card";
 import DebtProgressChart from "@/components/dashboard/debt-progress-chart";
-// Define types matching your DB schema
+
 type Income = {
   id: string;
+  userId: string;
+  source: "job" | "benefits" | "gift" | "side_hustle" | "other";
+  from: string;
   amount: string;
+  date: string;
+  isRecurring: boolean;
+  frequency?: "once" | "weekly" | "biweekly" | "monthly" | "quarterly" | "annually" | null;
+  endDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type Expense = {
   id: string;
+  userId: string;
+  category: "rent" | "utilities" | "groceries" | "transport" | "insurance" | "subscriptions" | "entertainment" | "debt" | "childcare" | "shopping" | "other";
+  to: string;
   amount: string;
+  date: string;
+  isRecurring: boolean;
+  frequency?: "once" | "weekly" | "biweekly" | "monthly" | "quarterly" | "annually" | null;
+  endDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type Debt = {
   id: string;
+  userId: string;
+  creditor: string;
+  holder: string;
+  type: "credit_card" | "loan" | "mortgage" | "overdraft" | "bnpl" | "car_finance" | "utility" | "other";
   balance: string;
   apr?: string | null;
   minPayment?: string | null;
-  debt_name?: string; // add if you store name or else creditor
-  creditor?: string;
+  paymentDate?: number | null;
+  isRecurring: boolean;
+  frequency?: "once" | "weekly" | "biweekly" | "monthly" | "quarterly" | "annually" | null;
+  endDate?: string | null;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export default function Dashboard() {
@@ -131,7 +158,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-8 space-y-6">
-      
+
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
 
         <div className="p-4 md:p-8 space-y-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
@@ -207,7 +234,7 @@ export default function Dashboard() {
                         balance: parseAmount(d.balance),
                         apr: d.apr ? parseFloat(d.apr) : 0,
                         minPayment: d.minPayment ? parseFloat(d.minPayment) : 0,
-                        debt_name: d.creditor || "Unnamed Debt",
+                        displayName: d.creditor || "Unnamed Debt",
                       }))
                       .sort((a, b) => a.balance - b.balance)
                       .slice(0, 3)
@@ -222,7 +249,7 @@ export default function Dashboard() {
                           <div className="flex justify-between items-center">
                             <div>
                               <h4 className="font-semibold text-slate-800">
-                                {index === 0 && "🎯 "} {debt.debt_name}
+                                {index === 0 && "🎯 "} {debt.displayName}
                               </h4>
                               <p className="text-sm text-slate-700">{debt.apr}% APR</p>
                             </div>
